@@ -1,9 +1,9 @@
 <template>
   <div class="app-wrapper">
     <div class="app">
-      <Navigation />
+      <Navigation v-if="!navigation"/>
       <router-view />
-      <Footer />
+      <Footer v-if="!navigation" />
     </div>
   </div>
 </template>
@@ -15,12 +15,28 @@ export default {
   name: "app",
   components: { Navigation, Footer },
   data() {
-    return {};
+    return {
+      navigation: null
+    };
   },
-  created() {},
+  created() {
+    this.checkRoutes()
+  },
   mounted() {},
-  methods: {},
-  watch: {},
+  methods: {
+    checkRoutes() {
+      if (this.$route.name === 'Login' || this.$route.name === 'Register' ||this.$route.name === 'ForgotPassword') {
+        this.navigation = true;
+        return
+      }
+      this.navigation = false
+    }
+  },
+  watch: {
+    $route() {
+      this.checkRoutes()
+    }
+  },
 };
 </script>
 
@@ -55,4 +71,74 @@ export default {
 .link-light {
   color: #fff;
 }
+
+.blog-card-wrap {
+  position: relative;
+  padding: 80px 16px;
+  background-color: #f1f1f1;
+
+}
+
+@media (min-width: 500px) {
+ .blog-card-wrap {
+   padding: 100px 16px;
+ }
+  
+}
+
+.arrow {
+  margin-left: 8px;
+  width: 12px;
+}
+.arrow-light path {
+  fill: #000;
+}
+
+button,
+.router-button {
+  transition: 500ms ease all;
+  cursor: pointer;
+  margin-top:  24px;
+  padding: 12px 24px;
+  background-color: #303030;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  text-transform: uppercase;
+}
+
+button:focus,
+.router-button:focus {
+ outline: none
+}
+
+button:hover,
+.router-button:hover {
+ background-color: rgba(48,48,48, 0.7);
+}
+
+
+
+.blog-cards {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+@media(min-width: 500px) {
+  .blog-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media(min-width: 900px) {
+  .blog-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media(min-width: 1200px) {
+  .blog-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 </style>

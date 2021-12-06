@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-wrapper">
+  <div class="blog-wrapper no-user">
     <div class="blog-content">
       <div>
         <h2 v-if="post.welcomeScreen">{{ post.title }}</h2>
@@ -9,7 +9,7 @@
         <router-link class="link link-light" v-if="post.welcomeScreen" to="#"
           >Login/Register <Arrow class="arrow arrow-light"
         /></router-link>
-        <router-link class="link link-light" v-else to="#"
+        <router-link class="link" v-else to="#"
           >View the Post <Arrow class="arrow"
         /></router-link>
       </div>
@@ -63,13 +63,10 @@ export default {
   justify-content: center;
   align-items: center;
   flex: 4;
-  order: 2;
 }
 
 @media (min-width: 700px) {
-  .blog-content {
-    order: 1;
-  }
+  
 }
 @media (min-width: 800px) {
   .blog-content {
@@ -134,7 +131,6 @@ p {
 }
 
 .blog-photo {
-  order: 1;
   flex: 3;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -158,10 +154,14 @@ p {
   object-fit: cover;
 }
 
-.blog-content:nth-child(n) {
-  order: 2;
+.blog-wrapper:nth-child(even){
+ display: flex;
+ flex-direction: row-reverse;
 }
-.blog-photo:nth-child(2n+1) {
-  order: 1;
+
+.no-user:first-child .blog-content {
+  background-color: #303030;
 }
+
+
 </style>
