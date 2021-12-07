@@ -11,17 +11,18 @@
       <div class="inputs">
         <div class="input">
           <input type="text" placeholder="Email" v-model="email" />
-          <email class="icon" />
+          <email class="icon"></email>
         </div>
         <div class="input">
           <input type="password" placeholder="Password" v-model="password" />
-          <password class="icon" />
+          <password class="icon"></password>
         </div>
+        <div v-show="error" class="error">{{ this.errorMessage }}</div>
       </div>
       <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }"
         >Forgot your password</router-link
       >
-      <button>Sign in</button>
+      <button @click.prevent="signIn">Sign in</button>
       <div class="angle"></div>
     </form>
     <div class="background"></div>
@@ -31,17 +32,38 @@
 <script>
 import email from "../assets/Icons/envelope-regular.svg";
 import password from "../assets/Icons/lock-alt-solid.svg";
+import firebase from "firebase/app";
+import "firebase/auth";
 export default {
   name: "Login",
   data() {
     return {
       email: null,
       password: null,
+      error: null,
+      errorMessage: "",
     };
   },
   components: {
     email,
     password,
+  },
+  methods: {
+    signIn() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          this.$router.push({name: 'Home'})
+          this.error = false;
+          this.errorMessage = "";
+          console.log(firebase.auth().currentUser.uid);
+        })
+        .catch((err) => {
+          this.error = true;
+          this.errorMessage = err.message;
+        });
+    },
   },
 };
 </script>
@@ -93,48 +115,76 @@ form h2 {
 }
 
 .inputs {
-    width: 100%;
-    max-width: 350px;
+  width: 100%;
+  max-width: 350px;
 }
 
-.inputs input {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 8px;
+.inputs .input {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-.input input {
-    width: 100%;
-    border: none;
-    background-color: #f2f7f6;
-    padding: 4px 4px 4px 30px;
-    height: 50px;
+.inputs .input input {
+  width: 100%;
+  border: none;
+  background-color: #f2f7f6;
+  padding: 4px 4px 4px 50px;
+  height: 50px;
 }
 
 .input input:focus {
-    outline: none;
+  outline: none;
 }
 
 .input .icon {
-    width: 12px;
-    position: absolute;
-    left: 6px;
+  position: absolute;
+  left: 6px;
 }
 
-form .forgot-password{
-    text-decoration: none;
-    color: #000;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 16px 0 32px;
-    border-bottom: 1px solid transparent;
-    transition: .5 ease all;
-
+form .forgot-password {
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 16px 0 32px;
+  border-bottom: 1px solid transparent;
+  transition: 0.5 ease all;
 }
 
 form .forgot-password:hover {
-    border-color: #303030;
+  border-color: #303030;
+}
+
+.angle {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  transform: rotate(3deg);
+  width: 60px;
+  right: -30px;
+  height: 101%;
+}
+@media (min-width: 900px) {
+  .angle {
+    display: initial;
+  }
+}
+
+.background {
+  display: none;
+  flex: 2;
+  background-size: cover;
+  background-image: url("../assets/background.png");
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 900px) {
+  .background {
+    display: initial;
+  }
 }
 </style>
